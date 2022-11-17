@@ -13,7 +13,7 @@
 #define ECHO_PIN     27  
 #define MAX_DISTANCE 25 
 
-int Cont,DeltaD,Soma,distancia;
+int Count,DistanciaSonar,DeltaD,Distancia;
 
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
@@ -31,35 +31,33 @@ void setup()
 
 void loop(){
   //Serial.println(sonar.ping_cm()); // Send ping, get distance in cm and print result (0 = outside set distance range)
-   DeltaD = sonar.ping_cm();
-   Soma += DeltaD;
-   Cont++;
+   DistanciaSonar = sonar.ping_cm();
+   DeltaD += DistanciaSonar;
+   Count++;
 
-   if(Cont>=20){//Calculo media
-      distancia = Soma/Cont;
+   if(Count>=50){//Calculo media
+      Distancia = DeltaD/Count;
       
-      Soma = 0;
-      Cont = 0;
+      DeltaD = 0;
+      Count = 0;
      }
   
-    if (distancia == 0){  
+    if (Distancia == 0){  
         pixels.clear();
         pixels.show();  //Exibe comando 
-     }else{ 
-        pixels.clear();         
-        PiscaLed(0,0,5);
-       }
+     } else PiscaLed();
+    
 
-  Serial.println(distancia);    
-  delay(10);
+  Serial.println(Distancia);    
+  //delay(5);
 }
 
-void PiscaLed(int r, int g, int b){
-  
-  for (int i = 0; i <= distancia-1; i++){
-        if ( i == distancia-1) pixels.setPixelColor(i, pixels.Color(50,50,50));
+void PiscaLed(){
+  pixels.clear();  
+  for (int i = 0; i <= Distancia-1; i++){
+        if ( i == Distancia-1) pixels.setPixelColor(i, pixels.Color(255,255,255));
 
-        else              pixels.setPixelColor(i, pixels.Color(r,g,b));
+        else              pixels.setPixelColor(i, pixels.Color(0,0,255));
     
        pixels.show();//Exibe leds
 
